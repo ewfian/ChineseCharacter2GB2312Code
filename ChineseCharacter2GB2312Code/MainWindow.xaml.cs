@@ -11,87 +11,39 @@ namespace ChineseCharacter2GB2312Code
     /// </summary>
     public partial class MainWindow : Window
     {
+        static TransformArray tfr = new TransformArray();
         public MainWindow()
         {
             InitializeComponent();
+            listBox.ItemsSource = tfr.Item;
         }
-
-        static StringBuilder allItem = new StringBuilder();
-        static HashSet<string> nameSet = new HashSet<string>();
         private void appendButton_Click(object sender, RoutedEventArgs e)
         {
-            var name = nameText.Text;
-
-            if (!Regex.IsMatch(name, "^[a-zA-Z_][a-zA-Z0-9_]*$"))
+            try
             {
-                MessageBox.Show("Illegal array name");
-                return;
-            }
+                tfr.Add(contentText.Text, nameText.Text);
 
-            if (nameSet.Contains(name))
-            {
-                MessageBox.Show("Array name already exists");
-                return;
+                nameText.Text += Guid.NewGuid().ToString("N").Substring(0,2);
             }
-            else
+            catch (Exception ex)
             {
-                nameSet.Add(name);
+                MessageBox.Show(ex.Message);
             }
-
-            var item = Transform(contentText.Text, name);
-            allItem.Append(item + Environment.NewLine);
-            listBox.Items.Add(item);
         }
 
         private void copyButton_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetDataObject(allItem.ToString());
+            Clipboard.SetDataObject(tfr.ToString());
         }
 
         private void clearButton_Click(object sender, RoutedEventArgs e)
         {
-            allItem.Clear();
-            listBox.Items.Clear();
+            tfr.Clear();
         }
 
         private void listBox_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            listBox.Items.RemoveAt(listBox.SelectedIndex);
-        }
-
-        private static StringBuilder Transform(string _stringArray, string _arrayName)
-        {
-            var tansformBuilder = new StringBuilder();
-            var inputArrays = Encoding.Default.GetBytes(_stringArray);
-
-            tansformBuilder.Append("unsigned char " + _arrayName + "[]={" + Environment.NewLine);
-
-            for (int i = 0; i < inputArrays.Length; i++)
-            {
-                tansformBuilder.Append("  ");
-                if (inputArrays[i] >= 128 && inputArrays[i] <= 247)
-                {
-                    tansformBuilder.Append(string.Format(@"0x{0},0x{1}",
-                        Convert.ToString(inputArrays[i], 16).ToUpper(), Convert.ToString(inputArrays[i + 1], 16).ToUpper()));
-                    i++;
-                }
-                else
-                {
-                    tansformBuilder.Append(string.Format("0x{0},0x00",
-                        Convert.ToString(inputArrays[i], 16).ToUpper()));
-                }
-                if (i < inputArrays.Length - 1)
-                {
-                    tansformBuilder.Append("," + Environment.NewLine);
-                }
-                else
-                {
-                    tansformBuilder.Append(Environment.NewLine);
-                }
-            }
-            tansformBuilder.Append("};\t//" + _stringArray + Environment.NewLine);
-
-            return tansformBuilder;
+            tfr.RemoveAt(listBox.SelectedIndex);
         }
     }
 }
