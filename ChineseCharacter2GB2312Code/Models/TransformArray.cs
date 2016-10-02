@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChineseCharacter2GB2312Code.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,6 +25,10 @@ namespace ChineseCharacter2GB2312Code
             if (_nameSet.Contains(_name))
             {
                 throw new ArgumentException("Array name already exists");
+            }
+            else if (KeywordMacher.Match(_name))
+            {
+                throw new ArgumentException("Array name is in conflict with keyword(C99)");
             }
             else
             {
