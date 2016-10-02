@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\ItemRawKv.cs" />
+    <Compile Include="Models\KeywordMacher.cs" />
     <Compile Include="Models\TransformArray.cs" />
     <Compile Include="Models\TransformItem.cs" />
     <Page Include="MainWindow.xaml">
