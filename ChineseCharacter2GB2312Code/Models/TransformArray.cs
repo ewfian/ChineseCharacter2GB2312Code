@@ -28,7 +28,7 @@ namespace ChineseCharacter2GB2312Code
             }
             else if (KeywordMacher.Match(_name))
             {
-                throw new ArgumentException("Array name is in conflict with keyword(C99)");
+                throw new ArgumentException("Array name is in conflict with keyword(CPP11)");
             }
             else
             {
